@@ -3,6 +3,7 @@ using System.Collections;
 
 public class UserInput : MonoBehaviour {
 
+    //Camera limits
 	public struct BoxLimit
 	{
 		public float LeftLimit;
@@ -17,41 +18,45 @@ public class UserInput : MonoBehaviour {
 
 	//Camera variables
 	private float ScrollSpeed = 250;
-	private float RotateSpeed = 100;
 	private float RotateAmount = 10;
+    private float RotateSpeed = 200;
 	private int ScrollWidth = 15;
 	private float MaxCameraHeight = 180;
 	private float MinCameraHeight;
+    private float MaxVerticalRotation = 65f;
+    private float MinVerticalRotation = 0f;
 
-	public float worldTerrainPadding = 25f;
+	public float WorldTerrainPadding = 0f;
 
 	
 	void Start () {
 
-		cameraLimits.LeftLimit = WorldTerrain.transform.position.x + worldTerrainPadding;
-		cameraLimits.RightLimit = WorldTerrain.terrainData.size.x - worldTerrainPadding;
-		cameraLimits.TopLimit = WorldTerrain.terrainData.size.z - worldTerrainPadding;
-		cameraLimits.BottomLimit = WorldTerrain.transform.position.z + worldTerrainPadding;
+		cameraLimits.LeftLimit = WorldTerrain.transform.position.x + WorldTerrainPadding;
+		cameraLimits.RightLimit = WorldTerrain.terrainData.size.x - WorldTerrainPadding;
+		cameraLimits.TopLimit = WorldTerrain.terrainData.size.z - WorldTerrainPadding;
+		cameraLimits.BottomLimit = WorldTerrain.transform.position.z + WorldTerrainPadding;
 	}
 
 	void Update () {
 
-			Vector3 desiredPosition = MoveCamera ();
+			Vector3 desiredPosition = CameraMovementVector ();
+            MinCameraHeight = WorldTerrain.SampleHeight(transform.position) + 35f;
 
-			if (isDesiredPositionOverBoundaries(desiredPosition))
+			if (!isDesiredPositionOverBoundaries(desiredPosition))
 			{
 				MoveCamera();
 			}
 
 			RotateCamera();
-			MinCameraHeight = WorldTerrain.SampleHeight(transform.position) + 10f;
 	}
 
-	//Moves camera
-	private Vector3 MoveCamera()
+
+	//Creates vector for camera movement
+	public Vector3 CameraMovementVector()
 	{
-		float xpos = Input.mousePosition.x;
-		float ypos = Input.mousePosition.y;
+        float xpos = Input.mousePosition.x;
+        float ypos = Input.mousePosition.y;
+
 		Vector3 movement = new Vector3(0,0,0);
 
 		//Horizontal camera movement
@@ -86,18 +91,26 @@ public class UserInput : MonoBehaviour {
 			destination.y = MinCameraHeight;
 		}
 
-		//Moves camera
-		if(destination != origin) {
-			Camera.main.transform.position = Vector3.MoveTowards(origin, destination, Time.deltaTime * ScrollSpeed);
-		}
-
 		return destination;
 	}
+    
+    //Moves camera
+    public void MoveCamera()
+    {
+        Vector3 origin = Camera.main.transform.position;
+        Vector3 cameraDestination = origin;
+        cameraDestination = CameraMovementVector();
+
+        if (cameraDestination != origin)
+        {
+            Camera.main.transform.position = Vector3.MoveTowards(origin, cameraDestination, Time.deltaTime * ScrollSpeed);
+        }
+    }
 
 	//Rotates camera
-	private void RotateCamera()
+	public void RotateCamera()
 	{
-		Vector3 originAngle = Camera.main.transform.eulerAngles;
+	    Vector3 originAngle = Camera.main.transform.eulerAngles;
 		Vector3 destinationAngle = originAngle;
 		
 		//Detect rotation amount if ALT is being held and the Right mouse button is down
@@ -106,19 +119,19 @@ public class UserInput : MonoBehaviour {
 			destinationAngle.y += Input.GetAxis("Mouse X") * RotateAmount;
 		}
 		
-		//If a change in position is detected perform the necessary update
-		if(destinationAngle != originAngle) {
+		//If a change in position is detected perform the necessary update. Cannot look to the sky.
+		if(destinationAngle != originAngle && destinationAngle.x > MinVerticalRotation && destinationAngle.x < MaxVerticalRotation) {
 			Camera.main.transform.eulerAngles = Vector3.MoveTowards(originAngle, destinationAngle, Time.deltaTime * RotateSpeed);
 		}
 	}
 
+    //Checks if camera destination is within boundaries
 	public bool isDesiredPositionOverBoundaries(Vector3 destination)
 	{
 		bool overBoundaries = false;
 
-		Vector3 desiredWorldPosition = this.transform.TransformPoint (destination);
+		Vector3 desiredWorldPosition = CameraMovementVector();
 
-		//Check boundaries
 		if (desiredWorldPosition.x < cameraLimits.LeftLimit)
 			overBoundaries = true;
 		
