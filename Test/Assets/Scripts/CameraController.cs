@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class UserInput : MonoBehaviour {
+public class CameraController : MonoBehaviour {
 
     //Camera limits
 	public struct BoxLimit
