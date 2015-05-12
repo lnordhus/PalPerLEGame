@@ -1,7 +1,7 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2008
 
-Project("{0CBC6611-F554-0BD0-809A-388DC95A615B}") = "Test", "Assembly-CSharp-vs.csproj", "{A513BC8D-6A7D-D6C5-EEBE-D27CF600D276}"
+Project("{3B6FBAF7-848B-ED94-EE2D-1A974169B04A}") = "RTS Game", "Assembly-CSharp-vs.csproj", "{C6E16847-E887-7182-5C3B-D6B36DBF5075}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A513BC8D-6A7D-D6C5-EEBE-D27CF600D276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A513BC8D-6A7D-D6C5-EEBE-D27CF600D276}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A513BC8D-6A7D-D6C5-EEBE-D27CF600D276}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A513BC8D-6A7D-D6C5-EEBE-D27CF600D276}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6E16847-E887-7182-5C3B-D6B36DBF5075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6E16847-E887-7182-5C3B-D6B36DBF5075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6E16847-E887-7182-5C3B-D6B36DBF5075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6E16847-E887-7182-5C3B-D6B36DBF5075}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
