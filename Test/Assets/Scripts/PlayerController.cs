@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour {
 	private float verticalSpeed;
 	private float dist;
 	private int floorMask;
-	private float camRayLength = 100f;
+	private float camRayLength = 10000f;
 	//private float yBound = 0.01;
 	
 	void Start()
@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour {
 
 		rb = GetComponent<Rigidbody> ();
 		dist = 0.6f;
-		floorMask = LayerMask.GetMask ("Floor");
+		floorMask = LayerMask.GetMask ("Terrain");
 	}
 
 	void FixedUpdate()
@@ -66,12 +66,12 @@ public class PlayerController : MonoBehaviour {
 		//beregner fallhastighet
 		fallSpeed = rb.velocity.y;
 
-		//finner hvor du klikker venstre musetast på terrain
-		Vector3 MousePos = new Vector3 (MouseOnGround());
-		if (Input.GetMouseButtonDown(0))
+		//finner hvor du klikker venstre musetast på terrain og lager en boks
+		if (Input.GetMouseButtonDown (0)) 
 		{
-			GameObject cube = GameObject.CreatePrimitive (PrimitiveType.Cube);
-			cube.transform.position = MousePos;
+			Vector3 posVector = new Vector3 (0,0,0);
+			//posVector = CreateBox (); 
+			//Destroy(other);
 		}
 	}
 
@@ -91,16 +91,22 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	void MouseOnGround (Vector3 playerToMouse)
+	void CreateBox ()
 	{
+
 		Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
 		RaycastHit floorHit;
 		if (Physics.Raycast (camRay, out floorHit, camRayLength, floorMask)) 
 		{
 			Vector3 playerToMouse = floorHit.point - transform.position;
 			playerToMouse.y = 0f;
+
+			GameObject cube = GameObject.CreatePrimitive (PrimitiveType.Cube);
+			cube.transform.position = playerToMouse;
+			cube.tag = ("Target");
+			Destroy (cube, 1);
+			return playerToMouse;
 		}
-		return Vector3 playerToMouse;
 	}
 	
 }
