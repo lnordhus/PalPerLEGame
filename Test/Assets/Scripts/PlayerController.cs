@@ -69,10 +69,21 @@ public class PlayerController : MonoBehaviour {
 		//finner hvor du klikker venstre musetast på terrain og lager en boks
 		if (Input.GetMouseButtonDown (0)) 
 		{
-			Vector3 posVector = new Vector3 (0,0,0);
-			//posVector = CreateBox (); 
+			Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
+			RaycastHit floorHit;
+			if (Physics.Raycast (camRay, out floorHit, camRayLength, floorMask)) 
+			{
+				Vector3 playerToMouse = floorHit.point - transform.position;
+				playerToMouse.y = 0f;
+				GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+				cube.transform.position = playerToMouse;
+				Destroy (cube,1);
+				Vector3 walkVector = rb.position - playerToMouse;
+			}
+			 
 			//Destroy(other);
 		}
+		Vector3 walkVector = rb.position - 
 	}
 
 	void OnGUI()
@@ -91,22 +102,6 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	void CreateBox ()
-	{
 
-		Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
-		RaycastHit floorHit;
-		if (Physics.Raycast (camRay, out floorHit, camRayLength, floorMask)) 
-		{
-			Vector3 playerToMouse = floorHit.point - transform.position;
-			playerToMouse.y = 0f;
-
-			GameObject cube = GameObject.CreatePrimitive (PrimitiveType.Cube);
-			cube.transform.position = playerToMouse;
-			cube.tag = ("Target");
-			Destroy (cube, 1);
-			return playerToMouse;
-		}
-	}
 	
 }
