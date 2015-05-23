@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
@@ -21,10 +21,11 @@ public class PlayerController : MonoBehaviour {
 
 		rb = GetComponent<Rigidbody> ();
 		dist = 0.6f;
-		floorMask = LayerMask.GetMask ("Terrain");
-		Vector3 walkVector = new Vector3 (0, 0, 0);
+		floorMask = LayerMask.GetMask ("Terrain"); 
+		GoalPos = rb.position;
 	}
 
+	Vector3 GoalPos;
 	void FixedUpdate()
 	{
 
@@ -59,6 +60,8 @@ public class PlayerController : MonoBehaviour {
 		//beregner fallhastighet
 		fallSpeed = rb.velocity.y;
 
+
+		//Vector3 walkVector = new Vector3 (0f, 0f, 0f);
 		//finner hvor du klikker venstre musetast på terrain og lager en boks
 		if (Input.GetMouseButtonDown (0)) {
 			Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
@@ -68,21 +71,19 @@ public class PlayerController : MonoBehaviour {
 				playerToMouse.y = 0f;
 				GameObject cube = GameObject.CreatePrimitive (PrimitiveType.Cube);
 				cube.transform.position = playerToMouse;
+				GoalPos = floorHit.point;
+				GoalPos.y = 1;
 				cube.tag = "Pick Up";
-				Destroy (cube, 5);
-				walkVector = rb.position + playerToMouse;
+				Destroy (cube, 5); 
+				//walkVector = rb.position + playerToMouse;
 				print ("safas");
 			}
 
-		} 
-		else 
-		{
-			walkVector = new Vector3 (0f, 0f, 0f);
-		}
-
+		}  
+		var walkVector = GoalPos - rb.position;
 		
 		//roterer figur
-		if (walkVector != rb.position) {
+		if ( walkVector.sqrMagnitude>1f) {
 			Quaternion retning = Quaternion.LookRotation (walkVector);
 			rb.MoveRotation (retning);
 		}
