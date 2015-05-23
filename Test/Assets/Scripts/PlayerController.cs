@@ -72,15 +72,17 @@ public class PlayerController : MonoBehaviour {
 				GameObject cube = GameObject.CreatePrimitive (PrimitiveType.Cube);
 				cube.transform.position = playerToMouse;
 				GoalPos = floorHit.point;
-				GoalPos.y = 1;
+				GoalPos.y = transform.position.y;
 				cube.tag = "Pick Up";
 				Destroy (cube, 5); 
 				//walkVector = rb.position + playerToMouse;
 				print ("safas");
 			}
 
-		}  
-		var walkVector = GoalPos - rb.position;
+		}   
+		//var myGlobalPos = transform.TransformPoint(transform.position);
+		var walkVector = (GoalPos - transform.position).normalized;
+		walkVector.y = 0f;
 		
 		//roterer figur
 		if ( walkVector.sqrMagnitude>1f) {
@@ -89,7 +91,10 @@ public class PlayerController : MonoBehaviour {
 		}
 		
 		//beveger player
-		rb.MovePosition (rb.position + (walkVector.normalized * speed * Time.deltaTime));
+		var dist = (transform.position - GoalPos).sqrMagnitude;
+		var dist2 = (transform.position - GoalPos).magnitude;
+		if(dist2>1f)
+			rb.MovePosition ( transform.position + (walkVector * speed * Time.deltaTime));//
 	}
 
 	void OnGUI()
