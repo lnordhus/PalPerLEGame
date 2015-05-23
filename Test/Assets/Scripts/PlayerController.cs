@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
 	RaycastHit hit;
 	public float speed;
 	public float jump;
+	public GameObject Marker;
 
 	private float fallSpeed;
 	private float horizontalSpeed;
@@ -14,11 +15,11 @@ public class PlayerController : MonoBehaviour {
 	private float dist;
 	private int floorMask;
 	private float camRayLength = 10000f;
+
 	//private float yBound = 0.01;
 	
 	void Start()
-	{
-
+	{ 
 		rb = GetComponent<Rigidbody> ();
 		dist = 0.6f;
 		floorMask = LayerMask.GetMask ("Terrain"); 
@@ -60,27 +61,24 @@ public class PlayerController : MonoBehaviour {
 		//beregner fallhastighet
 		fallSpeed = rb.velocity.y;
 
-
-		//Vector3 walkVector = new Vector3 (0f, 0f, 0f);
+		 
 		//finner hvor du klikker venstre musetast på terrain og lager en boks
 		if (Input.GetMouseButtonDown (0)) {
 			Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
 			RaycastHit floorHit;
-			if (Physics.Raycast (camRay, out floorHit, camRayLength, floorMask)) {
-				Vector3 playerToMouse = floorHit.point - transform.position;
-				playerToMouse.y = 0f;
-				GameObject cube = GameObject.CreatePrimitive (PrimitiveType.Cube);
-				cube.transform.position = playerToMouse;
+			if (Physics.Raycast (camRay, out floorHit, camRayLength, floorMask)) { 
 				GoalPos = floorHit.point;
 				GoalPos.y = transform.position.y;
-				cube.tag = "Pick Up";
-				Destroy (cube, 5); 
-				//walkVector = rb.position + playerToMouse;
-				print ("safas");
+
+				GameObject cube = GameObject.CreatePrimitive (PrimitiveType.Cube);
+
+				var marker = Instantiate(Marker,GoalPos,new Quaternion());
+				//marker.transform.position = GoalPos;
+				//marker.tag = "Pick Up";
+				Destroy (marker, 5);  
 			}
 
-		}   
-		//var myGlobalPos = transform.TransformPoint(transform.position);
+		}    
 		var walkVector = (GoalPos - transform.position).normalized;
 		walkVector.y = 0f;
 		
