@@ -16,6 +16,8 @@ public class CameraController : MonoBehaviour {
 	
 	public Terrain WorldTerrain;
 
+	private GameObject ScrollAngle;
+
 	//Camera variables
 	private float ScrollSpeed = 250;
 	private float RotateAmount = 10;
@@ -25,6 +27,7 @@ public class CameraController : MonoBehaviour {
 	private float MinCameraHeight;
     private float MaxVerticalRotation = 65f;
     private float MinVerticalRotation = 0f;
+	[HideInInspector] public float CameraHeight;
 
 	public float WorldTerrainPadding = 0f;
 
@@ -35,30 +38,71 @@ public class CameraController : MonoBehaviour {
 		cameraLimits.RightLimit = WorldTerrain.terrainData.size.x - WorldTerrainPadding;
 		cameraLimits.TopLimit = WorldTerrain.terrainData.size.z - WorldTerrainPadding;
 		cameraLimits.BottomLimit = WorldTerrain.transform.position.z + WorldTerrainPadding;
+
+		CameraHeight = transform.position.y;
+		ScrollAngle = new GameObject ();
 	}
 
 	void Update () {
 
-			Vector3 desiredPosition = CameraMovementVector ();
-            MinCameraHeight = WorldTerrain.SampleHeight(transform.position) + 35f;
+		Vector3 desiredPosition = CameraMovementVector ();
+        MinCameraHeight = WorldTerrain.SampleHeight(transform.position) + 35f;
 
-			if (!isDesiredPositionOverBoundaries(desiredPosition))
-			{
-				MoveCamera();
-			}
+		if (!isDesiredPositionOverBoundaries(desiredPosition))
+		{
+			MoveCamera();
+		}
 
-			RotateCamera();
+		RotateCamera();
+		ApplyScroll ();
 	}
 
+	public void ApplyScroll()
+	{
+		float deadZone = 0.01f;
+		float easeFactor = -20f;
+		float ScrollWheelValue = Input.GetAxis ("Mouse ScrollWheel") * easeFactor;
+
+		//Check deadzone
+		if (ScrollWheelValue > -deadZone && ScrollWheelValue < deadZone || ScrollWheelValue == 0f)
+			return;
+
+		float EulerAnglesX = Camera.main.transform.localEulerAngles.x;
+
+		ScrollAngle.transform.position = transform.position;
+		ScrollAngle.transform.eulerAngles = new Vector3 (EulerAnglesX, this.transform.eulerAngles.y, this.transform.eulerAngles.z);
+		ScrollAngle.transform.Translate(Vector3.back * ScrollWheelValue);
+
+		Vector3 desiredScrollPosition = ScrollAngle.transform.position;
+
+		//Check boundaries
+		if (desiredScrollPosition.x < cameraLimits.LeftLimit || desiredScrollPosition.x > cameraLimits.RightLimit)
+			return;
+
+		if (desiredScrollPosition.z > cameraLimits.TopLimit || desiredScrollPosition.z < cameraLimits.BottomLimit)
+			return;
+
+		if (desiredScrollPosition.y > MaxCameraHeight || desiredScrollPosition.y < MinCameraHeight)
+			return;
+
+		//Update camera height
+		float heightDifference = desiredScrollPosition.y - this.transform.position.y;
+		CameraHeight += heightDifference;
+
+		//Update camera position
+		this.transform.position = desiredScrollPosition;
+
+		return;
+	}
 
 	//Creates vector for camera movement
 	public Vector3 CameraMovementVector()
 	{
-        float xpos = Input.mousePosition.x;
-        float ypos = Input.mousePosition.y;
-
+		float xpos = Input.mousePosition.x;
+		float ypos = Input.mousePosition.y;
+		
 		Vector3 movement = new Vector3(0,0,0);
-
+		
 		//Horizontal camera movement
 		if((xpos >= 0 && xpos < ScrollWidth) || Input.GetKey (KeyCode.A)) {
 			movement.x -= ScrollSpeed;
@@ -72,45 +116,45 @@ public class CameraController : MonoBehaviour {
 		} else if((ypos <= Screen.height && ypos > Screen.height - ScrollWidth) || Input.GetKey (KeyCode.W)) {
 			movement.z += ScrollSpeed;
 		}
-
+		
 		//Camera only moves direction camera is facing
 		movement = Camera.main.transform.TransformDirection(movement);
 		movement.y = 0;
-
-		movement.y -= ScrollSpeed * Input.GetAxis("Mouse ScrollWheel") * 3;
-
+		
+		//movement.y -= ScrollSpeed * Input.GetAxis("Mouse ScrollWheel") * 3;
+		
 		Vector3 origin = Camera.main.transform.position;
 		Vector3 destination = origin;
 		destination.x += movement.x;
 		destination.y += movement.y;
 		destination.z += movement.z;
-
+		
 		if(destination.y > MaxCameraHeight) {
 			destination.y = MaxCameraHeight;
 		} else if(destination.y < MinCameraHeight) {
 			destination.y = MinCameraHeight;
 		}
-
+		
 		return destination;
 	}
-    
-    //Moves camera
-    public void MoveCamera()
-    {
-        Vector3 origin = Camera.main.transform.position;
-        Vector3 cameraDestination = origin;
-        cameraDestination = CameraMovementVector();
-
-        if (cameraDestination != origin)
-        {
-            Camera.main.transform.position = Vector3.MoveTowards(origin, cameraDestination, Time.deltaTime * ScrollSpeed);
-        }
-    }
-
+	
+	//Moves camera
+	public void MoveCamera()
+	{
+		Vector3 origin = Camera.main.transform.position;
+		Vector3 cameraDestination = origin;
+		cameraDestination = CameraMovementVector();
+		
+		if (cameraDestination != origin)
+		{
+			Camera.main.transform.position = Vector3.MoveTowards(origin, cameraDestination, Time.deltaTime * ScrollSpeed);
+		}
+	}
+	
 	//Rotates camera
 	public void RotateCamera()
 	{
-	    Vector3 originAngle = Camera.main.transform.eulerAngles;
+		Vector3 originAngle = Camera.main.transform.eulerAngles;
 		Vector3 destinationAngle = originAngle;
 		
 		//Detect rotation amount if ALT is being held and the Right mouse button is down
