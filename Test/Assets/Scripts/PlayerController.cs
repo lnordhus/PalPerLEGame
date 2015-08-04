@@ -66,6 +66,7 @@ public class PlayerController : MonoBehaviour {
 		if (dist2 > 0.1f) {
 			rb.MovePosition (transform.position + (walkVector * speed * Time.deltaTime));//
 		}
+
 	}
 
 	void OnGUI()
