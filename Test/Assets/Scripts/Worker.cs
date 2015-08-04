@@ -10,6 +10,9 @@ public class Worker : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		//if (MouseTagReturn == "Worker" && Input.GetMouseButtonDown (1) ){
+		//	Debug.Log ("ChoppChopp");
+		//}
+		//print (MouseTagReturn);
 	}
 }

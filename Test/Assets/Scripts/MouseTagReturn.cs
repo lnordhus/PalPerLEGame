@@ -13,15 +13,13 @@ public class MouseTagReturn : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	string Update () {
 		Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
 		RaycastHit ObjectTag;
 		if (Physics.Raycast (camRay, out ObjectTag, camRayLength)) { 
 			MouseTag = ObjectTag.transform.gameObject.name;
-			print (MouseTag);
 
-			//GoalPos = floorHit.point;
-			//GoalPos.y = transform.position.y;
 		}
+		return MouseTag;
 	}
 }
