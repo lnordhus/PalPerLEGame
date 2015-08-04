@@ -30,40 +30,12 @@ public class PlayerController : MonoBehaviour {
 	void FixedUpdate()
 	{
 
-		//float moveHorizontal = Input.GetAxisRaw ("Horizontal");
-		//float moveVertical = Input.GetAxisRaw ("Vertical");
-
-		//Vector3 down = new Vector3 (0, -1, 0);
-		//Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-
-		//lagrer bevegelse hvis i luften
-		//if (Physics.Raycast (transform.position, down, out hit, dist) == true) 
-		//{
-		//	horizontalSpeed = moveHorizontal;
-		//	verticalSpeed = moveVertical;
-		//}
-
-		//hopper
-		//if (Input.GetKey ("space") && Physics.Raycast(transform.position,down,out hit,dist) == true)
-		//{ 
-		//
-		//	rb.velocity = new Vector3 (0 , jump , 0);
-		//}
-		//Hvis hopper så fortset x og z bevegelse
-		//if (Physics.Raycast(transform.position,down,out hit,dist) == false)
-		//	{
-		//	movement = new Vector3 (0,0,0);
-		//	movement = new Vector3 (horizontalSpeed,0,verticalSpeed);
-		//
-		//	}
-
-
 		//beregner fallhastighet
 		fallSpeed = rb.velocity.y;
 
 		 
-		//finner hvor du klikker venstre musetast på terrain og lager en boks
-		if (Input.GetMouseButtonDown (0)) {
+		//finner hvor du klikker hoyre musetast på terrain og lager en boks
+		if (Input.GetMouseButtonDown (1)) {
 			Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
 			RaycastHit floorHit;
 			if (Physics.Raycast (camRay, out floorHit, camRayLength, floorMask)) { 
@@ -83,16 +55,17 @@ public class PlayerController : MonoBehaviour {
 		walkVector.y = 0f;
 		
 		//roterer figur
-		if ( walkVector.sqrMagnitude>1f) {
+		//if ( walkVector.sqrMagnitude>1f) {
 			Quaternion retning = Quaternion.LookRotation (walkVector);
 			rb.MoveRotation (retning);
-		}
+		//}
 		
 		//beveger player
 		var dist = (transform.position - GoalPos).sqrMagnitude;
 		var dist2 = (transform.position - GoalPos).magnitude;
-		if(dist2>1f)
-			rb.MovePosition ( transform.position + (walkVector * speed * Time.deltaTime));//
+		if (dist2 > 0.1f) {
+			rb.MovePosition (transform.position + (walkVector * speed * Time.deltaTime));//
+		}
 	}
 
 	void OnGUI()
