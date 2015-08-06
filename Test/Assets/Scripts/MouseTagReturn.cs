@@ -1,25 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MouseTagReturn : MonoBehaviour {
+public static class MouseHelper {
 
-	RaycastHit hit;
-	private float camRayLength = 10000f;
-	public string MouseTag = "";
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	string Update () {
+	public static string GetMouseTag(){
 		Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
 		RaycastHit ObjectTag;
-		if (Physics.Raycast (camRay, out ObjectTag, camRayLength)) { 
-			MouseTag = ObjectTag.transform.gameObject.name;
-
+		if (Physics.Raycast (camRay, out ObjectTag, 1000)) { 
+			return ObjectTag.transform.gameObject.tag;
+			
 		}
-		return MouseTag;
+		return "";
 	}
+
 }
