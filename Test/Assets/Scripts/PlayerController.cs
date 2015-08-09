@@ -3,19 +3,21 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-
+	Animator anim;
 	RaycastHit hit;
+
 	public float speed;
 	public float jump;
 	//public GameObject Marker;
-
-	private Rigidbody rb;
+	
 	private float fallSpeed;
 	private float horizontalSpeed;
 	private float verticalSpeed;
 	private int floorMask;
 	private float camRayLength = 10000f;
 
+	protected Rigidbody rb;
+	protected Vector3 GoalPos;
 	protected float dist;
 
 	//private float yBound = 0.01;
@@ -25,9 +27,11 @@ public class PlayerController : MonoBehaviour {
 		rb = GetComponent<Rigidbody> ();
 		floorMask = LayerMask.GetMask ("Terrain"); 
 		GoalPos = rb.position;
+
+		anim = GetComponent <Animator> ();
 	}
 
-	Vector3 GoalPos;
+
 	void FixedUpdate()
 	{
 
@@ -62,7 +66,7 @@ public class PlayerController : MonoBehaviour {
 		
 
 		MovePlayer (walkVector);
-
+		Animating (dist);
 
 	}
 
@@ -91,5 +95,17 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	
+	//Animer spiller
+	void Animating (float dist)
+	{
+		// Create a boolean that is true if either of the input axes is non-zero.
+		bool walking = dist >= 0.5f;
+
+		if (walking) {
+			Debug.Log ("hoa");
+		}
+
+		// Tell the animator whether or not the player is walking.
+		anim.SetBool ("Walk", walking);
+	}
 }
