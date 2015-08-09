@@ -5,6 +5,13 @@ using AssemblyCSharp;
 
 public class Worker : PlayerController {
 
+	private float TimePast = 0;
+	private int WoodCollected = 0;
+	private bool IsWorking;					//True når gjør en jobb
+	private bool IsWoodCutter;				//True når worker går mot tre
+	private bool IsCarryingRescourse;			//True når worker bærer ressurser
+	private GameObject TreeImChopping;
+
 	protected Object[] GameObjects;
 
 	// Use this for initialization
@@ -12,40 +19,49 @@ public class Worker : PlayerController {
 		base.Start ();
 		GameObjects = HelpersMethodes.InitiateAllGameObjects();
 	}
-
-	private float TimePast = 0;
-	private int WoodCollected = 0;
-	private bool IsCuttingWood;
-	private bool IsWoodCutter;
-
+	
 	// Update is called once per frame
 	void Update () {
-		if (dist <= 2 && IsWoodCutter && WoodCollected != 1){
-			Debug.Log ("Chopping tree");
-			IsCuttingWood = true;
-			TimePast += Time.deltaTime;
 
-			if (TimePast >= 5){
-				WoodCollected = 1;
-				IsCuttingWood = false;
-				Debug.Log ("Tree chopped");
-				SetGoalObject<LumberCamp>();
-			}
-		} 
-
-		if ( Input.GetMouseButtonDown (1) && HelpersMethodes.GetMouseTag () == "Tree" ){
+		//hugge trær
+		if ( Input.GetMouseButtonDown (1) && HelpersMethodes.GetGameObject ().tag == "Tree" ){
 			Debug.Log ("ChoppChopp");
 			IsWoodCutter = true;
-
+			TreeImChopping = HelpersMethodes.GetGameObject ();
 		}
+
+		if (dist <= 2 && IsWoodCutter && WoodCollected != 1){
+			Debug.Log ("Chopping tree");
+			IsWorking = true;
+
+			TimePast += Time.deltaTime;
+			
+			if (TreeImChopping != HelpersMethodes.GetGameObject () && Input.GetMouseButtonDown (1)){
+				TimePast = 0;
+				IsWorking = false;
+			}
+			if (TimePast >= 5){
+				WoodCollected = 1;
+				TreeImChopping.SetActive (false);
+				IsWorking = false;
+				Debug.Log ("Tree chopped");
+				SetGoalObject<LumberCamp>();
+				TimePast = 0;
+			}
+		} 
 
 	}
 
 	protected override void MovePlayer (Vector3 walkVector){
-		if (IsCuttingWood == true) {	
+		if (IsWorking == true) {
 			return;
 		}
 		base.MovePlayer(walkVector);
+	}
+
+	protected override bool ShouldWalk(float dist){
+		// Create a boolean that is true if either of the input axes is non-zero.
+		return base.ShouldWalk(dist) && !IsWorking;
 	}
 
 	private void SetGoalObject <type> () where type : Building {
@@ -66,5 +82,14 @@ public class Worker : PlayerController {
 			}
 		}
 		GoalPos = ShortestGoalPosition;
-	} //correctTypeOfBuilding.transform.position;
+	} 
+
+	protected override void OnTriggerEnter(Collider other) 
+	{
+		if (other.gameObject.tag == "LumberCamp")
+		{
+			WoodCollected = 0;
+		}
+	}
+	
 }
