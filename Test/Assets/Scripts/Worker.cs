@@ -31,7 +31,8 @@ public class Worker : PlayerController {
 				Debug.Log ("Tree chopped");
 				SetGoalObject<LumberCamp>();
 			}
-		}
+		} 
+
 		if ( Input.GetMouseButtonDown (1) && HelpersMethodes.GetMouseTag () == "Tree" ){
 			Debug.Log ("ChoppChopp");
 			IsWoodCutter = true;

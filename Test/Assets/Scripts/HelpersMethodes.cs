@@ -8,7 +8,9 @@ public static class HelpersMethodes {
 		Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
 		RaycastHit ObjectTag;
 		if (Physics.Raycast (camRay, out ObjectTag, 1000)) { 
+			//Debug.Log (ObjectTag.transform.gameObject.tag);
 			return ObjectTag.transform.gameObject.tag;
+
 			
 		}
 		return "";
