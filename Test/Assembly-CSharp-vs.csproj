@@ -46,10 +46,13 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Buildings\Building.cs" />
+     <Compile Include="Assets\Scripts\Buildings\LumberCamp.cs" />
      <Compile Include="Assets\Scripts\CameraControll.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
+     <Compile Include="Assets\Scripts\GameScript.cs" />
      <Compile Include="Assets\Scripts\HUD.cs" />
-     <Compile Include="Assets\Scripts\MouseTagReturn.cs" />
+     <Compile Include="Assets\Scripts\HelpersMethodes.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
      <Compile Include="Assets\Scripts\Rotater.cs" />
