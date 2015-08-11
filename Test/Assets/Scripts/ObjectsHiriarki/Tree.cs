@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-using AssemblyCSharp;
 
-public class LumberCamp : Building {
+public class Tree : Building {
 
 	// Use this for initialization
 	void Start () {

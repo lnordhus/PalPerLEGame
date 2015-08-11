@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using AssemblyCSharp;
 
 public class Worker : PlayerController {
 
@@ -10,14 +9,15 @@ public class Worker : PlayerController {
 	private bool IsWorking;					//True når gjør en jobb
 	private bool IsWoodCutter;				//True når worker går mot tre
 	private bool IsCarryingRescourse;			//True når worker bærer ressurser
-	private GameObject TreeImChopping;
+	private Tree TreeImChopping;
+	private StaticObjects GoalObject;
 
-	protected Object[] GameObjects;
+	protected List <StaticObjects> ListOfGameObjects;		//Masterlisten med posisjon over alle objekter
 
 	// Use this for initialization
 	protected override void Start () {
 		base.Start ();
-		GameObjects = HelpersMethodes.InitiateAllGameObjects();
+		ListOfGameObjects = HelpersMethodes.InitiateAllGameObjects();
 	}
 	
 	// Update is called once per frame
@@ -27,10 +27,12 @@ public class Worker : PlayerController {
 		if ( Input.GetMouseButtonDown (1) && HelpersMethodes.GetGameObject ().tag == "Tree" ){
 			Debug.Log ("ChoppChopp");
 			IsWoodCutter = true;
-			TreeImChopping = HelpersMethodes.GetGameObject ();
+			var clickedObject = HelpersMethodes.GetGameObject();
+			var existingObject = ListOfGameObjects.Find(x=>x.gameObject.GetInstanceID() == clickedObject.GetInstanceID());
+			TreeImChopping = ((Tree)existingObject);
 		}
 
-		if (dist <= 2 && IsWoodCutter && WoodCollected != 1){
+		if (dist <= 4 && IsWoodCutter && WoodCollected != 1){
 			Debug.Log ("Chopping tree");
 			IsWorking = true;
 
@@ -40,9 +42,9 @@ public class Worker : PlayerController {
 				TimePast = 0;
 				IsWorking = false;
 			}
-			if (TimePast >= 5){
+			if (TimePast >= 1){
 				WoodCollected = 1;
-				TreeImChopping.SetActive (false);
+				TreeImChopping.gameObject.SetActive (false);
 				IsWorking = false;
 				Debug.Log ("Tree chopped");
 				SetGoalObject<LumberCamp>();
@@ -64,24 +66,29 @@ public class Worker : PlayerController {
 		return base.ShouldWalk(dist) && !IsWorking;
 	}
 
-	private void SetGoalObject <type> () where type : Building {
+	private void SetGoalObject <type> () where type : StaticObjects {
 		var ShortestGoalPosition = new Vector3 ();
 		var myPosition = rb.transform.position;
 		var shortestDistFound = float.MaxValue;
+		StaticObjects tempGoalObject = null;
 
-		foreach (var element in GameObjects) {
-			var correctTypeOfBuilding = element as type;
-			if (correctTypeOfBuilding != null) {
+		foreach (var element in ListOfGameObjects) {
+			var correctTypeOfStaticObject = element as type;
+			if (correctTypeOfStaticObject != null) {
 
-				var dist =  (correctTypeOfBuilding.transform.position - myPosition).sqrMagnitude; 		//hvor langt er det fra element til meg
+				var dist =  (correctTypeOfStaticObject.transform.position - myPosition).sqrMagnitude; 		//hvor langt er det fra element til meg
 
 				if(dist < shortestDistFound){										//hvis element er nærmere, dvs dist er lavere enn tidligere funnet
 					shortestDistFound = dist;										//sett element til å være beste kandidat og sett hittil beste avstand til dist
-					ShortestGoalPosition = correctTypeOfBuilding.transform.position;
+					ShortestGoalPosition = correctTypeOfStaticObject.transform.position;
+					tempGoalObject = correctTypeOfStaticObject;
 				}
 			}
 		}
-		GoalPos = ShortestGoalPosition;
+		if (tempGoalObject != null) {
+			GoalObject = tempGoalObject;
+			GoalPos = ShortestGoalPosition;
+		}
 	} 
 
 	protected override void OnTriggerEnter(Collider other) 
@@ -89,6 +96,13 @@ public class Worker : PlayerController {
 		if (other.gameObject.tag == "LumberCamp")
 		{
 			WoodCollected = 0;
+			ListOfGameObjects.Remove(TreeImChopping);
+			SetGoalObject<Tree>();
+			var tempGoal = GoalObject as Tree;
+			if(tempGoal!=null){
+				TreeImChopping = tempGoal;
+			}
+			//ListOfGameObjects.
 		}
 	}
 	
