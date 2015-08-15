@@ -12,7 +12,7 @@ public class Worker : PlayerController {
 	private Tree TreeImChopping;
 	private StaticObjects GoalObject;
 
-	protected List <StaticObjects> ListOfGameObjects;		//Masterlisten med posisjon over alle objekter
+	public static List <StaticObjects> ListOfGameObjects;		//Masterlisten med posisjon over alle objekter
 
 	// Use this for initialization
 	protected override void Start () {
@@ -23,7 +23,7 @@ public class Worker : PlayerController {
 	// Update is called once per frame
 	void Update () {
 
-		//hugge trær
+		//************************   WoodCutter   *********************************
 		if ( Input.GetMouseButtonDown (1) && HelpersMethodes.GetGameObject ().tag == "Tree" ){
 			Debug.Log ("ChoppChopp");
 			IsWoodCutter = true;
@@ -51,9 +51,11 @@ public class Worker : PlayerController {
 				TimePast = 0;
 			}
 		} 
+		//************************   Farmer   *********************************
 
 	}
 
+	//************************   Methods   *********************************
 	protected override void MovePlayer (Vector3 walkVector){
 		if (IsWorking == true) {
 			return;
@@ -90,7 +92,7 @@ public class Worker : PlayerController {
 			GoalPos = ShortestGoalPosition;
 		}
 	} 
-
+	
 	protected override void OnTriggerEnter(Collider other) 
 	{
 		if (other.gameObject.tag == "LumberCamp")
@@ -105,5 +107,5 @@ public class Worker : PlayerController {
 			//ListOfGameObjects.
 		}
 	}
-	
+
 }

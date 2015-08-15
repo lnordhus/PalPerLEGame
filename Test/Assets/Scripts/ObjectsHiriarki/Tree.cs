@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Tree : Building {
+public class Tree : StaticObjects {
 
 	// Use this for initialization
 	void Start () {

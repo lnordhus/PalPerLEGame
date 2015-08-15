@@ -8,7 +8,6 @@ public static class HelpersMethodes {
 		Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
 		RaycastHit ObjectTag;
 		if (Physics.Raycast (camRay, out ObjectTag, 1000)) { 
-			//Debug.Log (ObjectTag.transform.gameObject.tag);
 			return ObjectTag.transform.gameObject;
 
 			
@@ -24,6 +23,18 @@ public static class HelpersMethodes {
 				ret.Add(mycastedObject);
 		}
 		return ret;
+	}
+
+	public static Vector3 GetMousePosition(){					//returnerer positionen til musa.
+		var Mouseposition = new Vector3 ();
+		Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
+		RaycastHit floorhit;
+		if (Physics.Raycast (camRay, out floorhit, 1000)) { 
+			Mouseposition = floorhit.point;
+			return Mouseposition;
+
+		}
+		return Mouseposition;
 	}
 
 //	public static Object[] UpdateListOfGameObjects (object[] Liste){
