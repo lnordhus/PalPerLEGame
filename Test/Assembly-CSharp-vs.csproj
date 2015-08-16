@@ -54,6 +54,7 @@
      <Compile Include="Assets\Scripts\ObjectsHiriarki\Building.cs" />
      <Compile Include="Assets\Scripts\ObjectsHiriarki\LumberCamp.cs" />
      <Compile Include="Assets\Scripts\ObjectsHiriarki\StaticObjects.cs" />
+     <Compile Include="Assets\Scripts\ObjectsHiriarki\Stone.cs" />
      <Compile Include="Assets\Scripts\ObjectsHiriarki\Tree.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
