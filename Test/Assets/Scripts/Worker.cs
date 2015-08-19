@@ -35,7 +35,7 @@ public class Worker : PlayerController {
 			TreeImChopping = ((Tree)existingObject);
 		}
 
-		if (dist <= 4 && IsWoodCutter && WoodCollected != 1){
+		if (dist <= 2 && IsWoodCutter && WoodCollected != 1){
 			Debug.Log ("Chopping tree");
 			IsWorking = true;
 
@@ -63,7 +63,7 @@ public class Worker : PlayerController {
 			StoneImCutting = ((Stone)existingObject);
 		}
 		
-		if (dist <= 4 && IsStoneMacen && StoneCollected != 1){
+		if (dist <= 2 && IsStoneMacen && StoneCollected != 1){
 			Debug.Log ("Baming Stone");
 			IsWorking = true;
 			

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 public static class HelpersMethodes {
 
@@ -37,7 +38,17 @@ public static class HelpersMethodes {
 		return Mouseposition;
 	}
 
-//	public static Object[] UpdateListOfGameObjects (object[] Liste){
-//
-//	}
+	public static Texture2D LoadPNG(string filePath) {		//Leser av png-fil og returnerer en array med bildet 
+		
+		Texture2D tex = null;
+		byte[] fileData;
+		
+		if (File.Exists(filePath))     {
+			fileData = File.ReadAllBytes(filePath);
+			tex = new Texture2D(2, 2);
+			tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+		}
+		return tex;
+	}
+
 }

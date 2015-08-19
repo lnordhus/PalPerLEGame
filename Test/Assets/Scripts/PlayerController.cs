@@ -37,6 +37,9 @@ public class PlayerController : MonoBehaviour {
 
 		//finner hvor du klikker hoyre musetast på terrain og lager en boks
 		if (Input.GetMouseButtonDown (1)) {
+			
+
+
 			Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
 			RaycastHit floorHit;
 			if (Physics.Raycast (camRay, out floorHit, camRayLength)) { 
