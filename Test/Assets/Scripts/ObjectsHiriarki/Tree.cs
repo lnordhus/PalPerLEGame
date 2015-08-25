@@ -2,16 +2,33 @@
 using System.Collections;
 
 public class Tree : StaticObjects {
-	public static int TreCounter = 0;
-	public int myID;
-	// Use this for initialization
-	void Start () {
-		TreCounter++;
-		myID = TreCounter;
-	}
+
+	Animator anim;
+
+	private float TimePast;
+
+	public bool IsBeingChoppet;
+	public bool IsFalling;
 	
-	// Update is called once per frame
+	void Start () {
+
+		anim = GetComponent <Animator> ();
+		
+	}
+
 	void Update () {
 
+		Animating ();
+		
+	}
+
+	//Animerer trekutting og at tre faller.
+	void Animating ()
+	{
+		
+		// Tell the animator whether or not the player is walking.
+		anim.SetBool ("Cutting", IsBeingChoppet);
+		anim.SetBool ("FallingTree", IsFalling);
+		
 	}
 }

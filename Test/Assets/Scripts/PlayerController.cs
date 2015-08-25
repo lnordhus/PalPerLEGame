@@ -102,4 +102,7 @@ public class PlayerController : MonoBehaviour {
 		// Create a boolean that is true if either of the input axes is non-zero.
 		return dist >= 0.5f;
 	}
+
+
+	
 }

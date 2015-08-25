@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Worker : PlayerController {
 
+	
 	private float TimePast = 0;
 	private int WoodCollected = 0;
 	private int StoneCollected = 0;
@@ -21,6 +22,7 @@ public class Worker : PlayerController {
 	protected override void Start () {
 		base.Start ();
 		ListOfGameObjects = HelpersMethodes.InitiateAllGameObjects();
+		
 	}
 	
 	// Update is called once per frame
@@ -38,53 +40,61 @@ public class Worker : PlayerController {
 		if (dist <= 2 && IsWoodCutter && WoodCollected != 1){
 			Debug.Log ("Chopping tree");
 			IsWorking = true;
+			TreeImChopping.IsBeingChoppet = true;
 
 			TimePast += Time.deltaTime;
 			
 			if (TreeImChopping != HelpersMethodes.GetGameObject () && Input.GetMouseButtonDown (1)){
 				TimePast = 0;
 				IsWorking = false;
+				TreeImChopping.IsBeingChoppet = false;
+				
 			}
-			if (TimePast >= 1){
+			if (TimePast >= 4){
+				TreeImChopping.IsFalling = true;
+			    }
+			if (TimePast >= 8){
 				WoodCollected = 1;
 				TreeImChopping.gameObject.SetActive (false);
 				IsWorking = false;
+				TreeImChopping.IsBeingChoppet = false;
 				Debug.Log ("Tree Chopped");
 				SetGoalObject<LumberCamp>();
 				TimePast = 0;
 			}
 		} 
 		//************************   StonMacen   *********************************
-		if ( Input.GetMouseButtonDown (1) && HelpersMethodes.GetGameObject ().tag == "Stone" ){
-			Debug.Log ("ChoppChopp");
-			IsStoneMacen = true;
-			var clickedObject = HelpersMethodes.GetGameObject();
-			var existingObject = ListOfGameObjects.Find(x=>x.gameObject.GetInstanceID() == clickedObject.GetInstanceID());
-			StoneImCutting = ((Stone)existingObject);
-		}
-		
-		if (dist <= 2 && IsStoneMacen && StoneCollected != 1){
-			Debug.Log ("Baming Stone");
-			IsWorking = true;
-			
-			TimePast += Time.deltaTime;
-			
-			if (StoneImCutting != HelpersMethodes.GetGameObject () && Input.GetMouseButtonDown (1)){
-				TimePast = 0;
-				IsWorking = false;
-			}
-			if (TimePast >= 1){
-				StoneCollected = 1;
-				StoneImCutting.gameObject.SetActive (false);
-				IsWorking = false;
-				Debug.Log ("Stone Smashed");
-				SetGoalObject<LumberCamp>();
-				TimePast = 0;
-			}
-		} 
+//		if ( Input.GetMouseButtonDown (1) && HelpersMethodes.GetGameObject ().tag == "Stone" ){
+//			Debug.Log ("ChoppChopp");
+//			IsStoneMacen = true;
+//			var clickedObject = HelpersMethodes.GetGameObject();
+//			var existingObject = ListOfGameObjects.Find(x=>x.gameObject.GetInstanceID() == clickedObject.GetInstanceID());
+//			StoneImCutting = ((Stone)existingObject);
+//		}
+//		
+//		if (dist <= 2 && IsStoneMacen && StoneCollected != 1){
+//			Debug.Log ("Baming Stone");
+//			IsWorking = true;
+//			
+//			TimePast += Time.deltaTime;
+//			
+//			if (StoneImCutting != HelpersMethodes.GetGameObject () && Input.GetMouseButtonDown (1)){
+//				TimePast = 0;
+//				IsWorking = false;
+//			}
+//			if (TimePast >= 1){
+//				StoneCollected = 1;
+//				StoneImCutting.gameObject.SetActive (false);
+//				IsWorking = false;
+//				Debug.Log ("Stone Smashed");
+//				SetGoalObject<LumberCamp>();
+//				TimePast = 0;
+//			}
+//		} 
 
 		//************************   Farmer   *********************************
 
+		
 	}
 
 	//************************   Methods   *********************************
@@ -123,6 +133,7 @@ public class Worker : PlayerController {
 			GoalObject = tempGoalObject;
 			GoalPos = ShortestGoalPosition;
 		}
+
 	} 
 	
 	protected override void OnTriggerEnter(Collider other) 		//Finne ny ressurs å hente etter å ha levert ressurs
@@ -148,5 +159,7 @@ public class Worker : PlayerController {
 			}
 		}
 	}
+
+
 
 }
