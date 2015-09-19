@@ -17,9 +17,7 @@ public static class HelpersMethodes {
 		return null;
 	}
 
-	public static UnityEngine.Object[] InitiateAllGameObjects(){
-		return UnityEngine.Object.FindObjectsOfType (typeof(LumberCamp));
-	}
+
 
 
 
@@ -92,9 +90,13 @@ public static class HelpersMethodes {
 	}
 
  
+	//public static UnityEngine.Object[] InitiateAllGameObjects(){
+	//	return UnityEngine.Object.FindObjectsOfType (typeof(LumberCamp));
+	//}
+
 	public static List <StaticObjects> InitiateAllGameObjects(){		//Returnerer alle objekter av typen Building (hittil LumberCamp og Tree)
 		var ret = new List <StaticObjects>();
-		foreach (var element in Object.FindObjectsOfType (typeof(StaticObjects))) {
+		foreach (var element in UnityEngine.Object.FindObjectsOfType (typeof(StaticObjects))) {
 			var mycastedObject = element as StaticObjects;
 			if(mycastedObject != null)
 				ret.Add(mycastedObject);
