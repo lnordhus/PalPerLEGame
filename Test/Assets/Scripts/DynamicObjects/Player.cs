@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
+
+	//IS NOT IN USE!!!!!!!!!!!!!!!!!
 	public bool isHuman;
 	public string userName;
 

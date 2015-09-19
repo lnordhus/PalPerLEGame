@@ -48,17 +48,17 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\CameraControll.cs" />
      <Compile Include="Assets\Scripts\CameraController.cs" />
+     <Compile Include="Assets\Scripts\DynamicObjects\Player.cs" />
+     <Compile Include="Assets\Scripts\DynamicObjects\PlayerController.cs" />
+     <Compile Include="Assets\Scripts\DynamicObjects\Worker.cs" />
      <Compile Include="Assets\Scripts\HUD.cs" />
      <Compile Include="Assets\Scripts\HelpersMethodes.cs" />
-     <Compile Include="Assets\Scripts\ObjectsHiriarki\Building.cs" />
-     <Compile Include="Assets\Scripts\ObjectsHiriarki\LumberCamp.cs" />
-     <Compile Include="Assets\Scripts\ObjectsHiriarki\StaticObjects.cs" />
-     <Compile Include="Assets\Scripts\ObjectsHiriarki\Stone.cs" />
-     <Compile Include="Assets\Scripts\ObjectsHiriarki\Tree.cs" />
-     <Compile Include="Assets\Scripts\Player.cs" />
-     <Compile Include="Assets\Scripts\PlayerController.cs" />
      <Compile Include="Assets\Scripts\Rotater.cs" />
-     <Compile Include="Assets\Scripts\Worker.cs" />
+     <Compile Include="Assets\Scripts\StaticObjects\Building.cs" />
+     <Compile Include="Assets\Scripts\StaticObjects\LumberCamp.cs" />
+     <Compile Include="Assets\Scripts\StaticObjects\StaticObjects.cs" />
+     <Compile Include="Assets\Scripts\StaticObjects\Stone.cs" />
+     <Compile Include="Assets\Scripts\StaticObjects\Tree.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Programfiler/Editor/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

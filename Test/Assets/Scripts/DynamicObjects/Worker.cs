@@ -11,29 +11,42 @@ public class Worker : PlayerController {
 	private bool IsWorking;					//True når gjør en jobb
 	private bool IsWoodCutter;				//True når worker går mot tre
 	private bool IsStoneMacen;				//True når worker går mot stein
-	private bool IsCarryingRescourse;			//True når worker bærer ressurser
+	private bool IsCarryingRescourse;		//True når worker bærer ressurser
 	private Tree TreeImChopping;
 	private Stone StoneImCutting;
 	private StaticObjects GoalObject;
 
-	public static List <StaticObjects> ListOfGameObjects;		//Masterlisten med posisjon over alle objekter
+	public PlayerController ThisWorker;				//Peker til en bestemt worker 
+
+	public static List <StaticObjects> ListOfStaticGameObjects;		//Masterlisten med posisjon over alle objekter
+	public static List <PlayerController> ListOfDynamicGameObjects;		//Masterlisten med posisjon over alle objekter
 
 	// Use this for initialization
 	protected override void Start () {
 		base.Start ();
-		ListOfGameObjects = HelpersMethodes.InitiateAllGameObjects();
+		ListOfStaticGameObjects = HelpersMethodes.InitiateAllStaticGameObjects();
+		ListOfDynamicGameObjects = HelpersMethodes.InitiateAllDynamicGameObjects();
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		//************************   Valg av arbeider   *********************************
+		if (Input.GetMouseButtonDown (0) && HelpersMethodes.GetGameObject ().tag == "Worker") {
+			var clickedObject = HelpersMethodes.GetGameObject();
+			var existingObject = ListOfDynamicGameObjects.Find(x=>x.gameObject.GetInstanceID() == clickedObject.GetInstanceID());
+			ThisWorker = ((PlayerController)existingObject);
+			Debug.Log (ThisWorker.GetInstanceID());
+
+		}
+
 
 		//************************   WoodCutter   *********************************
 		if ( Input.GetMouseButtonDown (1) && HelpersMethodes.GetGameObject ().tag == "Tree" ){
 			Debug.Log ("BamBam");
 			IsWoodCutter = true;
 			var clickedObject = HelpersMethodes.GetGameObject();
-			var existingObject = ListOfGameObjects.Find(x=>x.gameObject.GetInstanceID() == clickedObject.GetInstanceID());
+			var existingObject = ListOfStaticGameObjects.Find(x=>x.gameObject.GetInstanceID() == clickedObject.GetInstanceID());
 			TreeImChopping = ((Tree)existingObject);
 		}
 
@@ -98,11 +111,11 @@ public class Worker : PlayerController {
 	}
 
 	//************************   Methods   *********************************
-	protected override void MovePlayer (Vector3 walkVector){
+	protected override void MoveDynamicObject (Vector3 walkVector){
 		if (IsWorking == true) {
 			return;
 		}
-		base.MovePlayer(walkVector);
+		base.MoveDynamicObject(walkVector);
 	}
 
 	protected override bool ShouldWalk(float dist){
@@ -116,7 +129,7 @@ public class Worker : PlayerController {
 		var shortestDistFound = float.MaxValue;
 		StaticObjects tempGoalObject = null;
 
-		foreach (var element in ListOfGameObjects) {
+		foreach (var element in ListOfStaticGameObjects) {
 			var correctTypeOfStaticObject = element as type;
 			if (correctTypeOfStaticObject != null) {
 
@@ -141,7 +154,7 @@ public class Worker : PlayerController {
 		if (other.gameObject.tag == "LumberCamp" && IsWoodCutter)
 		{
 			WoodCollected = 0;
-			ListOfGameObjects.Remove(TreeImChopping);
+			ListOfStaticGameObjects.Remove(TreeImChopping);
 			SetGoalObject<Tree>();
 			var tempGoal = GoalObject as Tree;
 			if(tempGoal!=null){
@@ -151,7 +164,7 @@ public class Worker : PlayerController {
 		if (other.gameObject.tag == "LumberCamp" && IsStoneMacen)
 		{
 			StoneCollected = 0;
-			ListOfGameObjects.Remove(StoneImCutting);
+			ListOfStaticGameObjects.Remove(StoneImCutting);
 			SetGoalObject<Stone>();
 			var tempGoal = GoalObject as Stone;
 			if(tempGoal!=null){

@@ -21,7 +21,7 @@ public class StaticObjects : MonoBehaviour{
 			currentBuilding.transform.position = new Vector3(mousePos.x,currentBuilding.transform.position.y,mousePos.z);
 			if (Input.GetMouseButtonDown (0)) {
 				hasPlaced = true;
-				Worker.ListOfGameObjects.Add((StaticObjects)currentBuilding);
+				Worker.ListOfStaticGameObjects.Add((StaticObjects)currentBuilding);
 			}
 		}
 

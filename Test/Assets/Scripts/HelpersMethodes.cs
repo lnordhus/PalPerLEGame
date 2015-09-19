@@ -16,10 +16,20 @@ public static class HelpersMethodes {
 		return null;
 	}
 
-	public static List <StaticObjects> InitiateAllGameObjects(){		//Returnerer alle objekter av typen Building (hittil LumberCamp og Tree)
+	public static List <StaticObjects> InitiateAllStaticGameObjects(){		//Returnerer alle objekter av typen StaticObjects
 		var ret = new List <StaticObjects>();
 		foreach (var element in Object.FindObjectsOfType (typeof(StaticObjects))) {
 			var mycastedObject = element as StaticObjects;
+			if(mycastedObject != null)
+				ret.Add(mycastedObject);
+		}
+		return ret;
+	}
+
+	public static List <PlayerController> InitiateAllDynamicGameObjects(){		//Returnerer alle objekter av typen PlayerController
+		var ret = new List <PlayerController>();
+		foreach (var element in Object.FindObjectsOfType (typeof(PlayerController))) {
+			var mycastedObject = element as PlayerController;
 			if(mycastedObject != null)
 				ret.Add(mycastedObject);
 		}

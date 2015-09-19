@@ -14,10 +14,12 @@ public class PlayerController : MonoBehaviour {
 
 	public float speed;
 	public float jump;
+	
 
 	protected Rigidbody rb;
 	protected Vector3 GoalPos;
 	protected float dist;
+	protected PlayerController ThisDynamicObject;
 
 	protected virtual void Start()
 	{ 
@@ -60,8 +62,7 @@ public class PlayerController : MonoBehaviour {
 			rb.MoveRotation (retning);
 		//}
 		
-
-		MovePlayer (walkVector);
+		MoveDynamicObject (walkVector);
 		Animating (dist);
 
 	}
@@ -83,7 +84,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	//beveger player
-	protected virtual void MovePlayer (Vector3 walkVector){
+	protected virtual void MoveDynamicObject (Vector3 walkVector){
 		dist = (transform.position - GoalPos).sqrMagnitude;
 		var dist2 = (transform.position - GoalPos).magnitude;
 		if (dist2 > 0.1f) {
