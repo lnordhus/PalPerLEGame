@@ -1,16 +1,15 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
-using AssemblyCSharp;
 
-public class LumberCamp : Building {
-
+public class Stone : StaticObjects {
+	
 	// Use this for initialization
 	void Start () {
-	
+		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		
 	}
 }

@@ -13,17 +13,17 @@ public class PlayerController : MonoBehaviour {
 	//public GameObject Marker;
 	
 	private float fallSpeed;	
+
 	private float horizontalSpeed;
 	private float verticalSpeed;
 	private int floorMask;
 	private float camRayLength = 10000f;
 
+
 	protected Rigidbody rb;
 	protected Vector3 GoalPos;
 	protected float dist;
 
-	//private float yBound = 0.01;
-	
 	protected virtual void Start()
 	{ 
 		rb = GetComponent<Rigidbody> ();
@@ -41,11 +41,15 @@ public class PlayerController : MonoBehaviour {
 
 		//finner hvor du klikker hoyre musetast på terrain og lager en boks
 		if (Input.GetMouseButtonDown (1)) {
+			
+
+
 			Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
 			RaycastHit floorHit;
-			if (Physics.Raycast (camRay, out floorHit, camRayLength, floorMask)) { 
+			if (Physics.Raycast (camRay, out floorHit, camRayLength)) { 
 				GoalPos = floorHit.point;
 				GoalPos.y = transform.position.y;
+
 
 				//GameObject cube = GameObject.CreatePrimitive (PrimitiveType.Cube);
 
@@ -53,6 +57,7 @@ public class PlayerController : MonoBehaviour {
 				//marker.transform.position = GoalPos;
 				//marker.tag = "Pick Up";
 				//Destroy (marker, 5);  
+
 			}
 		}    
 		var walkVector = (GoalPos - transform.position).normalized;
@@ -78,7 +83,7 @@ public class PlayerController : MonoBehaviour {
 
 	}
 
-	void OnTriggerEnter(Collider other) 
+	protected virtual void OnTriggerEnter(Collider other) 
 	{
 		if (other.gameObject.tag == "Pick Up")
 		{
@@ -116,16 +121,17 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	//Animer spiller
-	void Animating (float dist)
+	protected virtual void Animating (float dist)
 	{
-		// Create a boolean that is true if either of the input axes is non-zero.
-		bool walking = dist >= 0.5f;
-
-		if (walking) {
-			Debug.Log ("hoa");
-		}
-
 		// Tell the animator whether or not the player is walking.
-		anim.SetBool ("Walk", walking);
+		anim.SetBool ("Walk", ShouldWalk (dist));
 	}
+
+	protected virtual bool ShouldWalk(float dist){
+		// Create a boolean that is true if either of the input axes is non-zero.
+		return dist >= 0.5f;
+	}
+
+
+	
 }

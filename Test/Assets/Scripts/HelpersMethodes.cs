@@ -2,19 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.IO;
 
 public static class HelpersMethodes {
 
-	public static string GetMouseTag(){
+	public static GameObject GetGameObject(){		//Returnerer objektet musen holder over
 		Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
 		RaycastHit ObjectTag;
 		if (Physics.Raycast (camRay, out ObjectTag, 1000)) { 
-			//Debug.Log (ObjectTag.transform.gameObject.tag);
-			return ObjectTag.transform.gameObject.tag;
+			return ObjectTag.transform.gameObject;
 
 			
 		}
-		return "";
+		return null;
 	}
 
 	public static UnityEngine.Object[] InitiateAllGameObjects(){
@@ -91,9 +91,42 @@ public static class HelpersMethodes {
 		return default(TElement);
 	}
 
+ 
+	public static List <StaticObjects> InitiateAllGameObjects(){		//Returnerer alle objekter av typen Building (hittil LumberCamp og Tree)
+		var ret = new List <StaticObjects>();
+		foreach (var element in Object.FindObjectsOfType (typeof(StaticObjects))) {
+			var mycastedObject = element as StaticObjects;
+			if(mycastedObject != null)
+				ret.Add(mycastedObject);
+		}
+		return ret;
+	}
 
+	public static Vector3 GetMousePosition(){					//returnerer positionen til musa.
+		var Mouseposition = new Vector3 ();
+		Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
+		RaycastHit floorhit;
+		if (Physics.Raycast (camRay, out floorhit, 1000)) { 
+			Mouseposition = floorhit.point;
+			return Mouseposition;
+
+		}
+		return Mouseposition;
+	}
+
+	public static Texture2D LoadPNG(string filePath) {		//Leser av png-fil og returnerer en array med bildet 
+		
+		Texture2D tex = null;
+		byte[] fileData;
+		
+		if (File.Exists(filePath))     {
+			fileData = File.ReadAllBytes(filePath);
+			tex = new Texture2D(2, 2);
+			tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+		}
+		return tex;
+	}
 }
-
 public class Cell{
 	public bool IsAvailable;
 	public float distToCell;
