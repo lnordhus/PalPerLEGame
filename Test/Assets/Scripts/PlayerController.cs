@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Threading;
 
 public class PlayerController : MonoBehaviour {
 
@@ -10,7 +12,7 @@ public class PlayerController : MonoBehaviour {
 	public float jump;
 	//public GameObject Marker;
 	
-	private float fallSpeed;
+	private float fallSpeed;	
 	private float horizontalSpeed;
 	private float verticalSpeed;
 	private int floorMask;
@@ -34,7 +36,6 @@ public class PlayerController : MonoBehaviour {
 
 	void FixedUpdate()
 	{
-
 		//beregner fallhastighet
 		fallSpeed = rb.velocity.y;
 
@@ -46,14 +47,13 @@ public class PlayerController : MonoBehaviour {
 				GoalPos = floorHit.point;
 				GoalPos.y = transform.position.y;
 
-				GameObject cube = GameObject.CreatePrimitive (PrimitiveType.Cube);
+				//GameObject cube = GameObject.CreatePrimitive (PrimitiveType.Cube);
 
 				//var marker = Instantiate(Marker,GoalPos,new Quaternion());
 				//marker.transform.position = GoalPos;
 				//marker.tag = "Pick Up";
 				//Destroy (marker, 5);  
 			}
-
 		}    
 		var walkVector = (GoalPos - transform.position).normalized;
 		walkVector.y = 0f;
@@ -85,14 +85,34 @@ public class PlayerController : MonoBehaviour {
 			other.gameObject.SetActive (false);
 		}
 	}
-
+	private bool _pathCreationStarted;
+	private Vector3 myPos;
+	private List<Waypoint> Path;
 	//beveger player
 	protected virtual void MovePlayer (Vector3 walkVector){
 		dist = (transform.position - GoalPos).sqrMagnitude;
 		var dist2 = (transform.position - GoalPos).magnitude;
-		if (dist2 > 0.1f) {
-			rb.MovePosition (transform.position + (walkVector * speed * Time.deltaTime));//
+		if (dist2 > 1f) {
+			if (Path == null && !_pathCreationStarted) {	
+				myPos = transform.position;
+				new Thread(UpdatePath).Start();
+			}
+			 
+			var firstWaypoint = HelpersMethodes.FirsOrDefault (Path, x => !x.hasVisited);
+			if (firstWaypoint != null) {
+				firstWaypoint.hasVisited = true;
+				rb.MovePosition (firstWaypoint.pos);
+			}			
+			//rb.MovePosition (transform.position + (walkVector * speed * Time.deltaTime));//
+		} else {
+			Path = null;
 		}
+	}
+
+	private void UpdatePath(){
+		_pathCreationStarted = true;
+		Path = HelpersMethodes.CreatePath (GoalPos, myPos);
+		_pathCreationStarted = false;
 	}
 
 	//Animer spiller
